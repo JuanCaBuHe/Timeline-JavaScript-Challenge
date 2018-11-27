@@ -9,3 +9,7 @@ This is the result of playing a bit with the original challenge.
 ## Contributing
 
 Feel free to enhance this script even more, everyone is welcomed! Just create a pull request.
+
+## Demo
+
+[https://juan-kbh.github.io/Timeline-JavaScript-Challenge/](https://juan-kbh.github.io/Timeline-JavaScript-Challenge/)
