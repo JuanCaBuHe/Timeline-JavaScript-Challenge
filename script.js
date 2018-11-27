@@ -29,47 +29,53 @@ let fullWindowTimetablePopUp = document.getElementById("fullWindowTimetablePopUp
 // Function to start a new match
 function startNewMatch (lengthOfPeriodInSeconds = 0, homeTeamName = '', awayTeamName = '') {
     // Check if a match is happening
-    if (!matchStarted) {
+    if (matchStarted) {
+        console.log(`
+        Please end the current match before starting a new one
+        `);
+    } else {
         if (lengthOfPeriodInSeconds <= 0){
             console.log(`
             Please enter a valid lenght for periods.
             `);
         } else {
-            // Remove previous match goals
-            document.querySelectorAll('.goal').forEach(
-                (goal) => {
-                    goal.classList.add('fadeOut');
-                    setTimeout(function(){
-                        timeline.removeChild(goal);
-                    }, 1200)
-                }
-            );
-            // Remove previous match timetable goals
-            document.querySelectorAll('.timetableGoal').forEach(
-                (goal) => {
-                    goal.parentElement.removeChild(goal);
-                }
-            );
-            closeTimetable();
-            matchStarted = true;
-            fullTimeInSeconds = lengthOfPeriodInSeconds * 10;
-            homeTeam = homeTeamName;
-            awayTeam = awayTeamName;
-            homeGoals = 0;
-            awayGoals = 0;
-            homeOverTimeGoals = 0;
-            awayOverTimeGoals = 0;
-            document.getElementById("homeName").innerText = homeTeam;
-            document.getElementById("timetableHomeName").innerText = homeTeam;
-            homeBoard.innerText = homeGoals;
-            document.getElementById("awayName").innerText = awayTeam;
-            document.getElementById("timetableAwayName").innerText = awayTeam;
-            awayBoard.innerText = awayGoals;
+            if (homeTeamName == '' || awayTeamName == '') {
+                console.log(`
+                Please enter valid team names.
+                `); 
+            } else {
+                // Remove previous match goals
+                document.querySelectorAll('.goal').forEach(
+                    (goal) => {
+                        goal.classList.add('fadeOut');
+                        setTimeout(function(){
+                            timeline.removeChild(goal);
+                        }, 1200)
+                    }
+                );
+                // Remove previous match timetable goals
+                document.querySelectorAll('.timetableGoal').forEach(
+                    (goal) => {
+                        goal.parentElement.removeChild(goal);
+                    }
+                );
+                closeTimetable();
+                matchStarted = true;
+                fullTimeInSeconds = lengthOfPeriodInSeconds * 10;
+                homeTeam = homeTeamName;
+                awayTeam = awayTeamName;
+                homeGoals = 0;
+                awayGoals = 0;
+                homeOverTimeGoals = 0;
+                awayOverTimeGoals = 0;
+                document.getElementById("homeName").innerText = homeTeam;
+                document.getElementById("timetableHomeName").innerText = homeTeam;
+                homeBoard.innerText = homeGoals;
+                document.getElementById("awayName").innerText = awayTeam;
+                document.getElementById("timetableAwayName").innerText = awayTeam;
+                awayBoard.innerText = awayGoals;
+            }
         }
-    } else {
-        console.log(`
-        Please end the current match before starting a new one
-        `);
     }
 }
 
@@ -77,9 +83,9 @@ function startNewMatch (lengthOfPeriodInSeconds = 0, homeTeamName = '', awayTeam
 function addGoal (timeInSeconds = 0, scoringTeam = '', scoringPlayer = '') {
     // Check if a match has started
     if (matchStarted) {
-        let team = scoringTeam.toLowerCase();
+        let team = scoringTeam;
         // Check if the team is valid
-        if (team == 'home' || team == 'away') {
+        if (team.toLowerCase() == homeTeam.toLowerCase() || team.toLowerCase() == awayTeam.toLowerCase()) {
             // Check if goal was scored in overtime
             let overTimeGoal = timeInSeconds >= fullTimeInSeconds;
             // Translation is calculated in vw units, being that the 100% of the timeline is 80vw
@@ -89,21 +95,21 @@ function addGoal (timeInSeconds = 0, scoringTeam = '', scoringPlayer = '') {
             var timetableGoal = document.createElement('span');
             timetableGoal.classList.add('timetableGoal');
             // Add the class that correspond to the team
-            timelineGoal.classList.add('goal', team);
+            timelineGoal.classList.add('goal', team.toLowerCase() == homeTeam.toLowerCase() ? 'home' : 'away');
             // Set attribute used for tooltip
             timelineGoal.setAttribute('goal', `${ (timeInSeconds > fullTimeInSeconds) ? '100+' + (timeInSeconds - fullTimeInSeconds) : timeInSeconds }' ${scoringPlayer}`);
             // Set timetable goal text
             timetableGoal.innerText = `${ (timeInSeconds > fullTimeInSeconds) ? '100+' + (timeInSeconds - fullTimeInSeconds) : timeInSeconds }' ${scoringPlayer}`
             // Update the score board and if goal is overtime we calculate the translation on Y axis and add the overtime goal to the corresponding team
             let yTranslate = 0;
-            if (team == 'home') {
+            if (team == homeTeam) {
                 homeGoals++;
                 homeBoard.innerText = homeGoals;
                 if (overTimeGoal) {
                     yTranslate = homeOverTimeGoals * -25;
                     homeOverTimeGoals++;
                 }
-            } else if (team == 'away') {
+            } else if (team == awayTeam) {
                 awayGoals++;
                 awayBoard.innerText = awayGoals;
                 if (overTimeGoal) {
@@ -121,7 +127,7 @@ function addGoal (timeInSeconds = 0, scoringTeam = '', scoringPlayer = '') {
                 timelineGoal.style.transform = `translate(${translation}vw, ${yTranslate}px)`;
             }, 100)
             // Goal added to the timetable
-            team == 'home' ? homeTimetable.appendChild(timetableGoal) : awayTimetable.appendChild(timetableGoal);
+            team == homeTeam ? homeTimetable.appendChild(timetableGoal) : awayTimetable.appendChild(timetableGoal);
         } else {
             console.log(`
             Please enter a valid team
@@ -177,58 +183,58 @@ function testMatch () {
     startNewMatch(10, 'Chelsea', 'Real Madrid');
 
     setTimeout(function(){
-        addGoal(5, 'away', 'Bale');
+        addGoal(5, 'Real Madrid', 'Bale');
     }, 500)
     setTimeout(function(){
-        addGoal(12, 'home', 'Hazard');
+        addGoal(12, 'Chelsea', 'Hazard');
     }, 1200)
     setTimeout(function(){
-        addGoal(13, 'away', 'Asensio');
+        addGoal(13, 'Real Madrid', 'Asensio');
     }, 1300)
     setTimeout(function(){
-        addGoal(25, 'home', 'Pedro');
+        addGoal(25, 'Chelsea', 'Pedro');
     }, 2500)
     setTimeout(function(){
-        addGoal(35, 'away', 'Asensio');
+        addGoal(35, 'Real Madrid', 'Asensio');
     }, 3500)
     setTimeout(function(){
-        addGoal(42, 'away', 'Benzema');
+        addGoal(42, 'Real Madrid', 'Benzema');
     }, 4200)
     setTimeout(function(){
-        addGoal(51, 'away', 'Ramos');
+        addGoal(51, 'Real Madrid', 'Ramos');
     }, 5100)
     setTimeout(function(){
-        addGoal(55, 'home', 'Pedro');
+        addGoal(55, 'Chelsea', 'Pedro');
     }, 5500)
     setTimeout(function(){
-        addGoal(60, 'home', 'Morata');
+        addGoal(60, 'Chelsea', 'Morata');
     }, 6000)
     setTimeout(function(){
-        addGoal(65, 'away', 'Kroos');
+        addGoal(65, 'Real Madrid', 'Kroos');
     }, 6500)
     setTimeout(function(){
-        addGoal(69, 'home', 'Willian');
+        addGoal(69, 'Chelsea', 'Willian');
     }, 6900)
     setTimeout(function(){
-        addGoal(79, 'home', 'Morata');
+        addGoal(79, 'Chelsea', 'Morata');
     }, 7900)
     setTimeout(function(){
-        addGoal(81, 'home', 'Hazard');
+        addGoal(81, 'Chelsea', 'Hazard');
     }, 8100)
     setTimeout(function(){
-        addGoal(82, 'away', 'Bale');
+        addGoal(82, 'Real Madrid', 'Bale');
     }, 8200)
     setTimeout(function(){
-        addGoal(93, 'away', 'Vinicius');
+        addGoal(93, 'Real Madrid', 'Vinicius');
     }, 9300)
     setTimeout(function(){
-        addGoal(100, 'home', 'Morata');
+        addGoal(100, 'Chelsea', 'Morata');
     }, 10000)
     setTimeout(function(){
-        addGoal(103, 'away', 'Bale');
+        addGoal(103, 'Real Madrid', 'Bale');
     }, 10300)
     setTimeout(function(){
-        addGoal(105, 'away', 'Vinicius');    
+        addGoal(105, 'Real Madrid', 'Vinicius');    
     }, 10500)
 
     setTimeout(function(){
