@@ -1,0 +1,147 @@
+html {
+    background: #EAF2EF;
+    width: 100vw;
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.mobileWarning {
+    display: none;
+}
+
+.scoreBoard {
+    padding: 10vw 0 0 0;
+    text-align: center;
+}
+
+.scoreBoard team {
+    display: inline-block;
+    margin: 0 5vw;
+    width: 25vw;
+}
+
+.scoreBoard team span {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 25%;
+}
+
+.scoreBoard team span.name {
+    background: transparent;
+    padding: 0;
+    font-size: 32px;
+    margin: 0 0 1vh 0;
+    display: block;
+    border-radius: 0;
+}
+
+.scoreBoard team span#homeBoard {
+    background: #92DCE5;
+}
+
+.scoreBoard team span#awayBoard {
+    background: #ED7525;
+}
+
+.container {
+    padding: 20vh 10vw 0 10vw;
+}
+
+.container .timeline {
+    height: 15px;
+    background: #000000;
+    position: relative;
+}
+
+.container .timeline span {
+    height: 15px;
+    width: 1px;
+    transform: translateX(calc(var(--n) * 8vw));
+    position: absolute;
+    background: #FFFFFF;
+    z-index: 10;
+}
+
+.container .timeline .goal {
+    height: 25px;
+    width: 10px;
+    position: absolute;
+    left: -5px;
+    z-index: 10;
+    border-radius: 50%;
+    border: 0.5px solid #EAF2EF;
+    transition: all 1s ease;
+}
+
+.container .timeline .goal::after {
+    content: attr(goal);
+    display: block;
+    width: 100px;
+    height: 12px;
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all .5s ease;
+    background: #ffffff;
+    color: #000000;
+    padding: 5px;
+    margin: 0;
+    opacity: 0;
+    z-index: 100;
+}
+
+.container .timeline .goal:hover::after {
+    display: block;
+    max-width: 100px;
+    max-height: 12px;
+    transition: all .5s ease;
+    font-size: 15px;
+    line-height: 12px;
+    text-align: center;
+    opacity: 1;
+}
+
+.container .timeline .goal.home {
+    background: #92DCE5;
+    top: -20px;
+}
+
+.container .timeline .goal.home::after {
+    transform: translate(15px, -10px);
+}
+
+.container .timeline .goal.away {
+    background: #ED7525;
+    top: 10px;
+}
+
+.container .timeline .goal.away::after {
+    transform: translate(15px, 20px);
+}
+
+.container .timeline .goal.fadeOut {
+    opacity: 0;
+}
+
+@media (max-width: 799px) {
+
+    .scoreBoard, .container {
+        display: none;
+    }
+
+    .mobileWarning {
+        width: auto;
+        display: block;
+        padding: 40vh 15vw;
+        text-align: center;
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+}
