@@ -1,5 +1,4 @@
 <div class="scoreBoard">
-
     <team>
         <span id="homeName" class="name"></span>
         <span id="homeBoard">0</span>
@@ -9,13 +8,10 @@
         <span id="awayName" class="name"></span>
         <span id="awayBoard">0</span>
     </team>
-
 </div>
 
 <div class="container">
-
     <div class="timeline">
-
         <span style="--n: 1"></span>
         <span style="--n: 2"></span>
         <span style="--n: 3"></span>
@@ -25,15 +21,26 @@
         <span style="--n: 7"></span>
         <span style="--n: 8"></span>
         <span style="--n: 9"></span>
-
     </div>
+    <span id="fullWindowTimetableTrigger">
+        See timetable
+    </span>
+</div>
 
+<div id="fullWindowTimetablePopUp">
+    <timetable>
+        <span id="fullWindowTimetablePopUpCloseButton">X</span>
+        <team id="timetableHome">
+            <span id="timetableHomeName" class="name"></span>
+        </team>
+        <team id="timetableAway">
+            <span id="timetableAwayName" class="name"></span>
+        </team>
+    </timetable>
 </div>
 
 <div class="mobileWarning">
-    
-    This experiencie is not suited for mobile (yet!), try on a screen with a width of at least 800px.
-
+    This experiencie is not fully suited for mobile (yet!), try on a screen with a width of at least 620px.
 </div>
 
 <link rel='stylesheet' href='styles.css'>

@@ -16,14 +16,15 @@ No overtime between periods, only on the last one.
 let matchStarted = false;
 let fullTimeInSeconds, homeTeam, awayTeam;
 let timeline = document.getElementsByClassName("timeline")[0];
-let homeNameBoard = document.getElementById("homeName");
 let homeBoard = document.getElementById("homeBoard");
-let awayNameBoard = document.getElementById("awayName");
+let homeTimetable = document.getElementById("timetableHome");
 let awayBoard = document.getElementById("awayBoard");
+let awayTimetable = document.getElementById("timetableAway");
 let homeGoals = 0;
 let awayGoals = 0;
 let homeOverTimeGoals = 0;
 let awayOverTimeGoals = 0;
+let fullWindowTimetablePopUp = document.getElementById("fullWindowTimetablePopUp");
 
 // Function to start a new match
 function startNewMatch (lengthOfPeriodInSeconds = 0, homeTeamName = '', awayTeamName = '') {
@@ -43,6 +44,13 @@ function startNewMatch (lengthOfPeriodInSeconds = 0, homeTeamName = '', awayTeam
                     }, 1200)
                 }
             );
+            // Remove previous match timetable goals
+            document.querySelectorAll('.timetableGoal').forEach(
+                (goal) => {
+                    goal.parentElement.removeChild(goal);
+                }
+            );
+            closeTimetable();
             matchStarted = true;
             fullTimeInSeconds = lengthOfPeriodInSeconds * 10;
             homeTeam = homeTeamName;
@@ -51,9 +59,11 @@ function startNewMatch (lengthOfPeriodInSeconds = 0, homeTeamName = '', awayTeam
             awayGoals = 0;
             homeOverTimeGoals = 0;
             awayOverTimeGoals = 0;
-            homeNameBoard.innerText = homeTeam;
-            awayNameBoard.innerText = awayTeam;
+            document.getElementById("homeName").innerText = homeTeam;
+            document.getElementById("timetableHomeName").innerText = homeTeam;
             homeBoard.innerText = homeGoals;
+            document.getElementById("awayName").innerText = awayTeam;
+            document.getElementById("timetableAwayName").innerText = awayTeam;
             awayBoard.innerText = awayGoals;
         }
     } else {
@@ -74,13 +84,18 @@ function addGoal (timeInSeconds = 0, scoringTeam = '', scoringPlayer = '') {
             let overTimeGoal = timeInSeconds >= fullTimeInSeconds;
             // Translation is calculated in vw units, being that the 100% of the timeline is 80vw
             let translation = overTimeGoal ? 80 : (timeInSeconds * 8000) / (fullTimeInSeconds * 100);
-            var action = document.createElement('div');
+            // HTML elements for timeline and timetable
+            var timelineGoal = document.createElement('div');
+            var timetableGoal = document.createElement('span');
+            timetableGoal.classList.add('timetableGoal');
             // Add the class that correspond to the team
-            action.classList.add('goal', team);
+            timelineGoal.classList.add('goal', team);
             // Set attribute used for tooltip
-            action.setAttribute('goal', `${ (timeInSeconds > fullTimeInSeconds) ? '100+' + (timeInSeconds - fullTimeInSeconds) : timeInSeconds }' ${scoringPlayer}`);
-            let yTranslate = 0;
+            timelineGoal.setAttribute('goal', `${ (timeInSeconds > fullTimeInSeconds) ? '100+' + (timeInSeconds - fullTimeInSeconds) : timeInSeconds }' ${scoringPlayer}`);
+            // Set timetable goal text
+            timetableGoal.innerText = `${ (timeInSeconds > fullTimeInSeconds) ? '100+' + (timeInSeconds - fullTimeInSeconds) : timeInSeconds }' ${scoringPlayer}`
             // Update the score board and if goal is overtime we calculate the translation on Y axis and add the overtime goal to the corresponding team
+            let yTranslate = 0;
             if (team == 'home') {
                 homeGoals++;
                 homeBoard.innerText = homeGoals;
@@ -97,14 +112,16 @@ function addGoal (timeInSeconds = 0, scoringTeam = '', scoringPlayer = '') {
                 }
             }
             // Goal added to the timeline
-            timeline.appendChild(action);
+            timeline.appendChild(timelineGoal);
             console.log(`
             ${timeInSeconds}: ${scoringPlayer}, goal by ${team} team
             `);
             // Translation is added after 100 miliseconds to trigger the CSS transition
             setTimeout(function(){
-                action.style.transform = `translate(${translation}vw, ${yTranslate}px)`;
+                timelineGoal.style.transform = `translate(${translation}vw, ${yTranslate}px)`;
             }, 100)
+            // Goal added to the timetable
+            team == 'home' ? homeTimetable.appendChild(timetableGoal) : awayTimetable.appendChild(timetableGoal);
         } else {
             console.log(`
             Please enter a valid team
@@ -125,10 +142,37 @@ function endMatch () {
     }
 }
 
+// Event to open timetable
+document.getElementById("fullWindowTimetableTrigger").addEventListener("click", function () {
+    fullWindowTimetablePopUp.style.display = "block";
+    // Opacity is added after 100 miliseconds to trigger the CSS transition
+    setTimeout(function(){
+        fullWindowTimetablePopUp.style.opacity = 1;
+    }, 100)
+}, false);
+
+// Function to close timetable
+function closeTimetable () {
+    fullWindowTimetablePopUp.style.opacity = 0;
+    // Display is changed after 1000 miliseconds to trigger the CSS transition
+    setTimeout(function(){
+        fullWindowTimetablePopUp.style.display = "none";
+    }, 1000)
+}
+
+// Events to close timetable
+fullWindowTimetablePopUp.addEventListener("click", closeTimetable, false);
+document.getElementById("fullWindowTimetablePopUpCloseButton").addEventListener("click", closeTimetable, false);
+
+// Stop click propagation on timetable
+document.getElementsByTagName("timetable")[0].addEventListener("click", function (e) { e.stopPropagation(), false})
+
 // Function to run a test match
 function testMatch () {
 
     endMatch();
+
+    closeTimetable();
 
     startNewMatch(10, 'Chelsea', 'Real Madrid');
 

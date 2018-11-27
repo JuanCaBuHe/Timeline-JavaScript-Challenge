@@ -1,7 +1,18 @@
+:root {
+    --tangelo: #ED7525;
+    --lightblue: #92DCE5;
+    --black: #001414;
+    --whitesmoke: #F7F7F7;
+    --whitecadet: #EAF2EF;
+    --spacecadet: #202C59;
+    --whiteshadow: rgb(247, 247, 247, 0.6);
+}
+
 html {
-    background: #EAF2EF;
+    background: var(--whitecadet);
     width: 100vw;
     overflow: hidden;
+    color: var(--black);
 }
 
 body {
@@ -42,11 +53,11 @@ body {
 }
 
 .scoreBoard team span#homeBoard {
-    background: #92DCE5;
+    background: var(--lightblue);
 }
 
 .scoreBoard team span#awayBoard {
-    background: #ED7525;
+    background: var(--tangelo);
 }
 
 .container {
@@ -55,7 +66,7 @@ body {
 
 .container .timeline {
     height: 15px;
-    background: #000000;
+    background: var(--black);
     position: relative;
 }
 
@@ -64,7 +75,7 @@ body {
     width: 1px;
     transform: translateX(calc(var(--n) * 8vw));
     position: absolute;
-    background: #FFFFFF;
+    background: var(--whitesmoke);
     z-index: 10;
 }
 
@@ -75,7 +86,7 @@ body {
     left: -5px;
     z-index: 10;
     border-radius: 50%;
-    border: 0.5px solid #EAF2EF;
+    border: 0.5px solid var(--whitecadet);
     transition: all 1s ease;
 }
 
@@ -88,8 +99,8 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: all .5s ease;
-    background: #ffffff;
-    color: #000000;
+    background: var(--whitesmoke);
+    color: var(--black);
     padding: 5px;
     margin: 0;
     opacity: 0;
@@ -100,7 +111,6 @@ body {
     display: block;
     max-width: 100px;
     max-height: 12px;
-    transition: all .5s ease;
     font-size: 15px;
     line-height: 12px;
     text-align: center;
@@ -108,7 +118,7 @@ body {
 }
 
 .container .timeline .goal.home {
-    background: #92DCE5;
+    background: var(--lightblue);
     top: -20px;
 }
 
@@ -117,7 +127,7 @@ body {
 }
 
 .container .timeline .goal.away {
-    background: #ED7525;
+    background: var(--tangelo);
     top: 10px;
 }
 
@@ -129,7 +139,87 @@ body {
     opacity: 0;
 }
 
-@media (max-width: 799px) {
+.container #fullWindowTimetableTrigger {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    margin: 10vw 0 0 0;
+    transition: all 0.5s;
+}
+
+.container #fullWindowTimetableTrigger:hover {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--spacecadet);
+}
+
+#fullWindowTimetablePopUp {
+    display: none;
+    background: var(--whiteshadow);
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 1s ease;
+}
+
+#fullWindowTimetablePopUp timetable {
+    display: block;
+    background: var(--spacecadet);
+    width: 80vw;
+    height: 80vh;
+    margin: 10vh auto;
+    border-radius: 2.5%;
+    text-align: center;
+    position: relative;
+    cursor: initial;
+    z-index: 1001;
+}
+
+#fullWindowTimetablePopUp timetable #fullWindowTimetablePopUpCloseButton {
+    position: absolute;
+    background: var(--black);
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 50%;
+    top: -8px;
+    right: -5px;
+    padding: 8px 10px;
+    line-height: 20px;
+    color: var(--whitesmoke);
+    cursor: pointer;
+}
+
+#fullWindowTimetablePopUp timetable team {
+    display: inline-block;
+    width: 35vw;
+    height: 100%;
+    overflow: auto;
+    margin: 0 2vw;
+}
+
+#fullWindowTimetablePopUp timetable team span {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 0 10px;
+    color: var(--whitecadet);
+    margin: 10px 0 5px 0;
+}
+
+#fullWindowTimetablePopUp timetable team span.name {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--whitesmoke);
+    margin: 25px 0 10px 0;
+}
+
+@media (max-width: 619px) {
 
     .scoreBoard, .container {
         display: none;
